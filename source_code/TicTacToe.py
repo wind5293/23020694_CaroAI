@@ -1,4 +1,5 @@
 import tkinter 
+from minimax import get_best_move
 
 def set_title(row, column):
     global curr_player
@@ -18,6 +19,16 @@ def set_title(row, column):
     label["text"] = f"{curr_player}'s turn"
     
     check_winner()
+    
+    if not game_over and curr_player == playerO:
+        window.update() # Optional: Force UI to update before AI freezes it to think
+        
+        # Pass the 'board' variable to the other file
+        ai_row, ai_col = get_best_move(board) 
+        
+        if ai_row != -1 and ai_col != -1:
+            # Re-use your own function to place the AI's move on the UI!
+            set_title(ai_row, ai_col)
     
 def check_winner():
     global turns, game_over

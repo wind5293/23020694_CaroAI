@@ -1,5 +1,5 @@
 import tkinter 
-from minimax import get_best_move
+from minimaxTest import get_best_move
 
 def set_title(row, column):
     global curr_player
@@ -83,11 +83,16 @@ def check_winner():
         game_over = True
         return
     
+    if turns == 3 * 3:
+        label.config(text="Tie!", foreground=color_yellow)
+        game_over = True
+    
 def new_game():
-    global turns, game_over
+    global turns, game_over, curr_player
     
     turns = 0
     game_over = False
+    curr_player = playerX
     
     label.config(text=f"{curr_player}'s turn", foreground="white")
     for row in range(len(board)):
