@@ -12,32 +12,34 @@ def set_title(row, column):
     
     board[row][column]["text"] = curr_player
     
-    if curr_player == playerO:
-        curr_player = playerX
-    else: curr_player = playerO
-    
+    board[row][column]["text"] = curr_player
+    curr_player = playerO
     label["text"] = f"{curr_player}'s turn"
     
     check_winner()
     
-    if not game_over and curr_player == playerO:
-        window.update() # Optional: Force UI to update before AI freezes it to think
-        
-        # Pass the 'board' variable to the other file
-        ai_row, ai_col = get_best_move(board) 
-        
-        if ai_row != -1 and ai_col != -1:
-            # Re-use your own function to place the AI's move on the UI!
-            set_title(ai_row, ai_col)
+    if not game_over:
+        window.after(100, ai_move) 
+
+def ai_move():
+    global curr_player
+
+    if game_over:
+        return
+
+    ai_row, ai_col = get_best_move(board)
+    
+    if ai_row != -1 and ai_col != -1:
+        board[ai_row][ai_col]["text"] = playerO
+        curr_player = playerX
+        label["text"] = f"{curr_player}'s turn"
+        check_winner()
     
 def check_winner():
     global turns, game_over
     turns += 1
     
     n = len(board)
-    
-    if n < 4: 
-        return
     
     # Check row
     for r in range(n):
@@ -87,10 +89,11 @@ def check_winner():
         game_over = True
        
 def new_game():
-    global turns, game_over
+    global turns, game_over, curr_player
     
     turns = 0
     game_over = False
+    curr_player = playerX
     
     label.config(text=f"{curr_player}'s turn", foreground="white")
     for row in range(len(board)):
