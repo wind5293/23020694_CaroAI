@@ -138,8 +138,8 @@ def minimax(board, depth, max_depth, alpha, beta, is_AI_O_turn):
     # Đánh giá liệu có ai thắng chưa
     terminal_score = logicalEvaluationBoard(board)
     if terminal_score is not None:
-        if terminal_score == 10: return 1000000 
-        if terminal_score == -10: return -1000000
+        if terminal_score == 10: return 1000000 - depth * 100000
+        if terminal_score == -10: return -1000000 + depth * 100000
         return 0 # Hòa
 
     if depth == max_depth:

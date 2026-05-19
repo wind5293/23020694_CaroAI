@@ -117,9 +117,9 @@ def minimax(board, depth, max_depth, is_AI_O_turn):
     
     terminal_score = logicalEvaluationBoard(board)
     if terminal_score is not None:
-        if terminal_score == 10: return 1000000 
-        if terminal_score == -10: return -1000000
-        return 0 # Hòa
+        if terminal_score == 10: return 1000000 - depth * 100000
+        if terminal_score == -10: return -1000000 + depth * 100000
+        return 0 
 
     if depth == max_depth:
         return heuristicEvaluation(board)
