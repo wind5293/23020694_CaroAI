@@ -1,5 +1,5 @@
 import tkinter 
-from minimax import get_best_move
+from source_code.minimax_alpha_beta import get_best_move
 
 def set_title(row, column):
     global curr_player

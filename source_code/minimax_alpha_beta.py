@@ -1,5 +1,7 @@
 import math
 
+state_count = 0
+
 def logicalEvaluationBoard(board):
     n = len(board)
     
@@ -107,10 +109,33 @@ def heuristicEvaluation(board):
             total_score += evaluate_window(window)
 
     return total_score
-    
-def minimax(board, depth, max_depth, is_AI_O_turn):
+
+def get_candidate_moves(board):
     n = len(board)
+    candidates = set()
+ 
+    for r in range(n):
+        for c in range(n):
+            if board[r][c]["text"] != "":
+                for dr in range(-2, 3):
+                    for dc in range(-2, 3):
+                        nr, nc = r + dr, c + dc
+                        if 0 <= nr < n and 0 <= nc < n and board[nr][nc]["text"] == "":
+                            candidates.add((nr, nc))
+ 
+    # Đầu game chưa có quân nào → đánh giữa bàn
+    if not candidates:
+        mid = n // 2
+        candidates.add((mid, mid))
+ 
+    return candidates
     
+def minimax(board, depth, max_depth, alpha, beta, is_AI_O_turn):
+    n = len(board)
+    global state_count
+    state_count += 1
+    
+    # Đánh giá liệu có ai thắng chưa
     terminal_score = logicalEvaluationBoard(board)
     if terminal_score is not None:
         if terminal_score == 10: return 1000000 
@@ -120,44 +145,45 @@ def minimax(board, depth, max_depth, is_AI_O_turn):
     if depth == max_depth:
         return heuristicEvaluation(board)
     
+    candidates = get_candidate_moves(board)
+ 
     if is_AI_O_turn:
-        best_score = -math.inf
-        for r in range(n):
-            for c in range(n):
-                if (board[r][c]["text"] == ''):
-                    board[r][c]["text"] = 'O'
-                    current_score = minimax(board, depth + 1, max_depth, False)
-                    board[r][c]["text"] = ""
-                    best_score = max(best_score, current_score)
-        return best_score
+        best = -math.inf
+        for r, c in candidates:
+            board[r][c]["text"] = 'O'
+            score = minimax(board, depth + 1, max_depth, alpha, beta, False)
+            board[r][c]["text"] = ""
+            best = max(best, score)
+            alpha = max(alpha, best)
+            if beta <= alpha: 
+                break
+        return best
     else:
-        best_score = math.inf
-        for r in range(n):
-            for c in range(n):
-                if (board[r][c]["text"] == ''):
-                    board[r][c]["text"] = 'X'
-                    current_score = minimax(board, depth + 1, max_depth, True)
-                    board[r][c]["text"] = ""
-                    best_score = min(best_score, current_score)
-        return best_score
+        best = math.inf
+        for r, c in candidates:
+            board[r][c]["text"] = 'X'
+            score = minimax(board, depth + 1, max_depth, alpha, beta, True)
+            board[r][c]["text"] = ""
+            best = min(best, score)
+            beta = min(beta, best)
+            if beta <= alpha: 
+                break
+        return best
     
 def get_best_move(board):
     n = len(board)
     best_score = -math.inf
-    best_move_row = -1
-    best_move_col = -1
+    best_move_row, best_move_col = -1, -1 
     max_depth = 2
 
-    for r in range(n):
-        for c in range(n):
-            if board[r][c]["text"] == "":
-                board[r][c]["text"] = "O"
-                score = minimax(board, 0, max_depth, False)
-                board[r][c]["text"] = "" # Undo
-                
-                if score > best_score:
-                    best_score = score
-                    best_move_row = r
-                    best_move_col = c
-    print(best_move_row, best_move_col, best_score)
+    candidates = get_candidate_moves(board)
+    for r, c in candidates:
+        board[r][c]["text"] = "O"
+        score = minimax(board, 0, max_depth, -math.inf, math.inf, False)
+        board[r][c]["text"] = ""
+        if score > best_score:
+            best_score = score
+            best_move_row, best_move_col = r, c
+            
+    print(f"AI chọn: ({best_move_row}, {best_move_col}) | score = {best_score}")
     return best_move_row, best_move_col
