@@ -1,4 +1,4 @@
-# Đồ án Trí tuệ nhân tạo: Cờ Caro AI (Minimax & Alpha-Beta Pruning)
+# Bài tập Trí tuệ nhân tạo: Cờ Caro AI (Minimax & Alpha-Beta Pruning)
 
 Dự án này là bài tập thực hành môn Trí tuệ nhân tạo, cài đặt trò chơi cờ Caro (kích thước 9x9) giữa người và máy. AI của máy tính được xây dựng dựa trên thuật toán tìm kiếm **Minimax** và được tối ưu hóa bằng kỹ thuật cắt tỉa **Alpha-Beta**.
 
