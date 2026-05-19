@@ -1,5 +1,7 @@
 import math
 
+state_count = 0
+
 def logicalEvaluationBoard(board):
     n = len(board)
     
@@ -110,6 +112,8 @@ def heuristicEvaluation(board):
     
 def minimax(board, depth, max_depth, is_AI_O_turn):
     n = len(board)
+    global state_count
+    state_count += 1
     
     terminal_score = logicalEvaluationBoard(board)
     if terminal_score is not None:

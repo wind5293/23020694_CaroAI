@@ -1,5 +1,5 @@
 import tkinter 
-from source_code.minimax_alpha_beta import get_best_move
+from minimax_alpha_beta import get_best_move
 
 def set_title(row, column):
     global curr_player
@@ -11,8 +11,7 @@ def set_title(row, column):
         return
     
     board[row][column]["text"] = curr_player
-    
-    board[row][column]["text"] = curr_player
+
     curr_player = playerO
     label["text"] = f"{curr_player}'s turn"
     
@@ -27,7 +26,9 @@ def ai_move():
     if game_over:
         return
 
-    ai_row, ai_col = get_best_move(board)
+    virtual_board = [[{"text": board[r][c]["text"]} for c in range(len(board))] for r in range(len(board))]
+
+    ai_row, ai_col = get_best_move(virtual_board) 
     
     if ai_row != -1 and ai_col != -1:
         board[ai_row][ai_col]["text"] = playerO
@@ -37,9 +38,8 @@ def ai_move():
     
 def check_winner():
     global turns, game_over
-    turns += 1
-    
     n = len(board)
+    turns = sum(1 for r in range(n) for c in range(n) if board[r][c]["text"] != "")
     
     # Check row
     for r in range(n):
