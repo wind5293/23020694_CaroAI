@@ -1,0 +1,4 @@
+# Dự án sử dụng thư viện tiêu chuẩn của Python (Tkinter, Math, Time)
+# Không yêu cầu cài đặt thêm thư viện bên ngoài qua pip.
+
+python >= 3.7
